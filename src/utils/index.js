@@ -1,3 +1,7 @@
+function escapeRegExp(string) {
+  return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"); // $& means the whole matched string
+}
+
 function attachDataValues(element, data, dataAttributes) {
   const mention = element;
   Object.keys(data).forEach((key) => {
@@ -27,7 +31,11 @@ function getMentionCharIndex(
       let mentionCharIndex;
 
       if (isolateChar && allowInlineMentionChar) {
-        const regex = new RegExp(`^${mentionChar}|\\s${mentionChar}`, "g");
+        const mentionCharEscapedRegexp = escapeRegExp(mentionChar);
+        const regex = new RegExp(
+          `^${mentionCharEscapedRegexp}|\\s${mentionCharEscapedRegexp}`,
+          "g"
+        );
         const lastMatch = (text.match(regex) || []).pop();
 
         if (!lastMatch) {
